@@ -1,0 +1,37 @@
+
+@font-face {font-family: "iconfont";
+  src: url('iconfont.eot?t=1499321183117'); /* IE9*/
+  src: url('iconfont.eot?t=1499321183117#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1499321183117') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1499321183117') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1499321183117#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+[class^="icon-"], [class*="icon-"] {
+  font-family:"iconfont" !important;
+  font-size:20px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-normal:before { content: "\e690"; }
+
+.icon-list:before { content: "\e603"; }
+
+.icon-play:before { content: "\e634"; }
+
+.icon-random:before { content: "\e60c"; }
+
+.icon-volume:before { content: "\e604"; }
+
+.icon-previous:before { content: "\e600"; }
+
+.icon-pause:before { content: "\e695"; }
+
+.icon-mute:before { content: "\e72b"; }
+
+.icon-next:before { content: "\e601"; }
+
+.icon-repeat:before { content: "\e605"; }
+

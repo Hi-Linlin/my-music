@@ -1,0 +1,44 @@
+html, body {
+  height: 100%;
+  overflow: hidden
+}
+
+body {
+  margin: 0;
+  background-color: #eee;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+input[type="range"] {
+  &::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(80, 175, 242, .6);
+  border-radius: 50%;
+  cursor: pointer;
+  height: 12px;
+  width: 12px;
+  transition: .2s;
+  position: relative;
+  z-index: 1;
+
+  &:hover, &:active {
+    transform: scale(1.4);
+  }
+  }
+}
+
+.slide-fade-enter-active {
+  transition: all .3s ease-in-out;
+}
+.slide-fade-leave-active {
+  transition: all .3s ease-in-out;
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateX(100%);
+}
