@@ -1,17 +1,20 @@
 <template>
   <div class="my-music">
-    <div class="music-bg"></div>
+    <div class="music-bg" :style="{'background-image': `url('../../static/music-cover/${ activeMusic.name }.jpg')`}"></div>
     <main class="music-main">
       <div class="main-body">
         <div class="body-bg" @click="closeSideBar"></div>
         <div class="body-cover" @click="closeSideBar">
-          <div v-for="item in 3"></div>
+          <transition name="cd-slide">
+            <span v-if="paused"></span>
+          </transition>
+          <div v-for="item in 3" :style="{'background-image': `url('../../static/music-cover/${ activeMusic.name }.jpg')`}"></div>
         </div>
         <div class="body-lyrics"></div>
         <transition name="slide-fade">
           <div class="body-side-bar" v-if="sideBarVisible">
             <div class="bar-header">
-              <span @click="showSideBar">ㄨ</span>
+              <!-- <span @click="showSideBar">ㄨ</span> -->
               <div
                 v-for="item in tabs"
                 :class="{ active: item === activeTab }"
@@ -21,19 +24,19 @@
             </div>
             <div class="bar-content">
               <ul v-if="activeTab === 'Playlist'">
-                <li v-for="item in musicList" :class="{ active: item === activeMusic }" @click="handleSelect(item)">
-                  <div v-if="item === activeMusic && paused">
+                <li v-for="item in musicList" :class="{ active: item.name === activeMusic.name }" @click="handleSelect(item)">
+                  <div v-if="item.name === activeMusic.name && paused">
                     <span class="active-icon" v-for="item in 3"></span>
                   </div>
-                  {{ item.replace(/\.mp3$/, '') }}
+                  {{ item.name }}
                 </li>
               </ul>
               <ul v-else>
-                <li v-for="item in historyList" :class="{ active: item === activeMusic }" @click="handleSelect(item)">
-                  <div v-if="item === activeMusic && paused">
+                <li v-for="item in historyList" :class="{ active: item.name === activeMusic.name }" @click="handleSelect(item)">
+                  <div v-if="item.name === activeMusic.name && paused">
                     <span class="active-icon" v-for="item in 3"></span>
                   </div>
-                  {{ item.replace(/\.mp3$/, '') }}
+                  {{ item.name }}
                 </li>
               </ul>
             </div>
@@ -49,7 +52,7 @@
         <div class="footer-center">
           <div class="center-progressBar">
             <div class="music-info">
-              {{ activeMusic.replace(/\.mp3$/, '') }}
+              {{ activeMusic.name }}
               <span>{{ currentTime }}&ensp;/&ensp;{{ audioDuration }}</span>
             </div>
             <div class="progressBar-main">
@@ -67,7 +70,7 @@
           <i :class="[`icon-${ matchPlayMode }`]" @click="changePlayMode"></i>
           <i :class="[`icon-${ matchVolume }`]" @click="showVolume"></i>
           <i class="icon-list" @click="showSideBar"></i>
-          <div class="right-volume" v-if="volumeVisible">
+          <div class="right-volume" v-show="volumeVisible">
             <div class="volume-main">
               <input type="range" v-model="volumeValue" @input="changeVolume">
               <span class="progress-bar" :style="{ width: `${ volumeValue }%` }"></span>
@@ -78,7 +81,7 @@
     </main>
     <audio
       id="audio"
-      :src="'../../static/music-list/' + activeMusic"
+      :src="activeMusic.value"
       controls="controls"
       ref="audio"
       @timeupdate="getCurrentTime"
@@ -94,7 +97,19 @@
 
     data() {
       return {
-        musicList: ['Halo.mp3', 'Big Jet Plane.mp3', 'Stay With Me.mp3', 'Take You Away.mp3'],
+        musicList: [{
+          name: 'Stay With Me',
+          value: '../../static/music-list/Stay With Me.mp3'
+        }, {
+          name: 'Take You Away',
+          value: '../../static/music-list/Take You Away.mp3'
+        }, {
+          name: 'Big Jet Plane',
+          value: '../../static/music-list/Big Jet Plane.mp3'
+        }, {
+          name: 'Yellow Brick Road',
+          value: '../../static/music-list/Yellow Brick Road.mp3'
+        }],
         audio: '',
         audioDuration: '00.00',
         paused: false,
@@ -102,7 +117,10 @@
         volumeValue: 100,
         progressValue: 0,
         number: 0,
-        activeMusic: '',
+        activeMusic: {
+          name: '',
+          value: ''
+        },
         historyList: [],
         playModeList: ['normal', 'repeat', 'random'],
         activeMode: 'normal',
@@ -189,6 +207,7 @@
       toggleMusic(type) {
         if (this.toggleLock) return;
         this.toggleLock = true;
+        this.paused = false;
 
         new Promise((resolve, reject) => {
           if (type === 'next') {
@@ -280,6 +299,7 @@
     mounted() {
       this.audio = this.$refs.audio;  
       this.activeMusic = this.musicList[0];
+      console.log(this.activeMusic);
       this.historyRecord();
       document.addEventListener('keydown', (e) => {
         const value = this.volumeValue;
@@ -292,6 +312,7 @@
           } else {
             this.volumeValue = 100;
           }
+          this.changeVolume();
         };
         if (e.keyCode == 189) {
           if (value > 0) {
@@ -299,6 +320,7 @@
           } else {
             this.volumeValue = 0;
           }
+          this.changeVolume();
         };
       });
     }
@@ -317,7 +339,6 @@
     }
 
     .music-bg {
-      background-image: url('../assets/1.jpg');
       background-repeat: no-repeat;
       background-size: cover;
       height: 100%;
@@ -343,7 +364,7 @@
         .body-bg {
           height: 100%;
           background-color: #fff;
-          opacity: .9;
+          opacity: .8;
         }
 
         .body-cover {
@@ -357,13 +378,33 @@
           margin: auto;
           text-align: center;
 
+          span {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            background: url('../assets/cd.png') no-repeat;
+            background-position: center;
+            background-size: 84%;
+            animation: 10s play linear infinite forwards normal;
+            transition: 4s;
+            will-change: transform;
+          }
+
+          @keyframes play {
+            from {
+              transform: rotate(0);
+            }
+            to {
+              transform: rotate(360deg);
+            }
+          }
+
           div {
             height: 100%;
             width: 100%;
-            background: url('../assets/1.jpg') no-repeat;
             background-position: center;
             background-size: cover;
-            // -webkit-box-reflect: below 0 -webkit-linear-gradient(top,rgba(250,250,250,0),rgba(250,250,250,.0) 70%,rgba(250,250,250, .5));
+            background-repeat: no-repeat;
           }
 
           div:nth-of-type(1) {
@@ -381,6 +422,8 @@
           div:nth-of-type(3) {
             position: relative;
           }
+
+
         }
 
         .body-side-bar {
