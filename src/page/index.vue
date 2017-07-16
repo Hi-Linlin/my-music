@@ -1,6 +1,6 @@
 <template>
   <div class="my-music">
-    <div class="music-bg" :style="{'background-image': `url('../../static/music-cover/${ activeMusic.name }.jpg')`}"></div>
+    <div class="music-bg" :style="{'background-image': `url('static/music-cover/${ activeMusic.name }.jpg')`}"></div>
     <main class="music-main">
       <div class="main-body">
         <div class="body-bg" @click="closeSideBar"></div>
@@ -8,7 +8,7 @@
           <transition name="cd-slide">
             <span v-if="paused"></span>
           </transition>
-          <div v-for="item in 3" :style="{'background-image': `url('../../static/music-cover/${ activeMusic.name }.jpg')`}"></div>
+          <div v-for="item in 3" :style="{'background-image': `url('static/music-cover/${ activeMusic.name }.jpg')`}"></div>
         </div>
         <div class="body-lyrics"></div>
         <transition name="slide-fade">
@@ -99,16 +99,16 @@
       return {
         musicList: [{
           name: 'Stay With Me',
-          value: '../../static/music-list/Stay With Me.mp3'
+          value: 'static/music-list/Stay With Me.mp3'
         }, {
           name: 'Take You Away',
-          value: '../../static/music-list/Take You Away.mp3'
+          value: 'static/music-list/Take You Away.mp3'
         }, {
           name: 'Big Jet Plane',
-          value: '../../static/music-list/Big Jet Plane.mp3'
+          value: 'static/music-list/Big Jet Plane.mp3'
         }, {
           name: 'Yellow Brick Road',
-          value: '../../static/music-list/Yellow Brick Road.mp3'
+          value: 'static/music-list/Yellow Brick Road.mp3'
         }],
         audio: '',
         audioDuration: '00.00',
